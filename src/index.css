@@ -1,0 +1,208 @@
+@import url('https://fonts.googleapis.com/css2?family=Lora:ital,wght@0,400;0,500;0,600;0,700;1,400;1,500&family=IBM+Plex+Sans:wght@300;400;500;600&family=IBM+Plex+Mono:wght@400;500&display=swap');
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  html {
+    background-color: #0a0a0a;
+    color: #D7DADC;
+    font-family: "IBM Plex Sans", system-ui, sans-serif;
+    scroll-behavior: smooth;
+  }
+
+  * {
+    box-sizing: border-box;
+  }
+
+  ::-webkit-scrollbar {
+    width: 6px;
+  }
+
+  ::-webkit-scrollbar-track {
+    background: #111111;
+  }
+
+  ::-webkit-scrollbar-thumb {
+    background: #2a2a2a;
+    border-radius: 3px;
+  }
+
+  ::-webkit-scrollbar-thumb:hover {
+    background: #FF4500;
+  }
+}
+
+@layer components {
+
+  .app-shell {
+    @apply flex min-h-screen;
+    background-color: #0a0a0a;
+  }
+
+  .sidebar {
+    @apply w-60 shrink-0 flex flex-col sticky top-0 h-screen overflow-y-auto;
+    background-color: #111111;
+    border-right: 1px solid #2a2a2a;
+  }
+
+  .sidebar-link {
+    @apply flex items-center gap-3 px-4 py-2.5 text-sm font-medium rounded-lg mx-2 transition-all duration-150;
+    color: #818384;
+  }
+
+  .sidebar-link:hover {
+    background-color: #1a1a1a;
+    color: #FFFFFF;
+  }
+
+  .sidebar-link.active {
+    background-color: #1a1a1a;
+    color: #FFFFFF;
+  }
+
+  .sidebar-link.active .sidebar-icon {
+    color: #FF4500;
+  }
+
+  .post-card {
+    @apply flex mb-2 rounded-md cursor-pointer transition-colors duration-150;
+    background-color: #111111;
+    border: 1px solid #2a2a2a;
+  }
+
+  .post-card:hover {
+    border-color: #818384;
+  }
+
+  .vote-col {
+    @apply flex flex-col items-center gap-1 px-2 py-2 rounded-l-md w-10 shrink-0;
+    background-color: #1a1a1a;
+  }
+
+  .vote-btn {
+    @apply w-6 h-6 flex items-center justify-center rounded transition-all duration-150;
+    color: #818384;
+  }
+
+  .vote-btn:hover {
+    color: #FF4500;
+    background-color: rgba(255, 69, 0, 0.1);
+  }
+
+  .badge {
+    @apply inline-flex items-center px-2 py-0.5 rounded text-xs font-medium;
+  }
+
+  .badge-scam {
+    @apply badge;
+    background-color: rgba(255, 88, 91, 0.12);
+    color: #FF585B;
+    border: 1px solid rgba(255, 88, 91, 0.2);
+  }
+
+  .badge-legitimate {
+    @apply badge;
+    background-color: rgba(70, 209, 96, 0.12);
+    color: #46D160;
+    border: 1px solid rgba(70, 209, 96, 0.2);
+  }
+
+  .badge-suspicious {
+    @apply badge;
+    background-color: rgba(255, 176, 0, 0.12);
+    color: #FFB000;
+    border: 1px solid rgba(255, 176, 0, 0.2);
+  }
+
+  .badge-unverified {
+    @apply badge;
+    background-color: rgba(255, 255, 255, 0.05);
+    color: #818384;
+    border: 1px solid #2a2a2a;
+  }
+
+  .input {
+    @apply w-full rounded px-3 py-2.5 text-sm transition-all duration-200;
+    background-color: #1a1a1a;
+    border: 1px solid #2a2a2a;
+    color: #FFFFFF;
+  }
+
+  .input::placeholder {
+    color: #818384;
+  }
+
+  .input:focus {
+    outline: none;
+    border-color: rgba(255, 69, 0, 0.6);
+    box-shadow: 0 0 0 1px rgba(255, 69, 0, 0.2);
+  }
+
+  .label {
+    @apply block text-xs font-semibold uppercase tracking-wider mb-1.5;
+    color: #818384;
+  }
+
+  .error-text {
+    @apply text-xs mt-1.5;
+    color: #FF585B;
+  }
+
+  .btn-primary {
+    @apply inline-flex items-center justify-center gap-2 text-white font-semibold px-4 py-1.5 rounded-full text-sm active:scale-95 transition-all duration-150 disabled:opacity-50;
+    background-color: #FF4500;
+  }
+
+  .btn-primary:hover {
+    background-color: #FF6534;
+  }
+
+  .btn-secondary {
+    @apply inline-flex items-center justify-center gap-2 font-semibold px-4 py-1.5 rounded-full text-sm transition-all duration-150;
+    border: 1px solid #2a2a2a;
+    color: #D7DADC;
+  }
+
+  .btn-secondary:hover {
+    border-color: #818384;
+    color: #FFFFFF;
+  }
+
+  .btn-ghost {
+    @apply inline-flex items-center gap-2 font-medium px-3 py-1.5 rounded-full text-xs transition-all duration-150;
+    color: #818384;
+  }
+
+  .btn-ghost:hover {
+    background-color: #1a1a1a;
+    color: #FFFFFF;
+  }
+
+  .page-content {
+    @apply flex-1 max-w-3xl mx-auto w-full;
+  }
+
+  .editorial {
+    font-family: "Lora", Georgia, serif;
+    line-height: 1.8;
+    color: #D7DADC;
+  }
+
+  .editorial h1,
+  .editorial h2,
+  .editorial h3 {
+    font-family: "Lora", Georgia, serif;
+    color: #FFFFFF;
+  }
+}
+
+@layer utilities {
+  .text-gradient {
+    background: linear-gradient(90deg, #FF4500, #FF6534);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+  }
+}
