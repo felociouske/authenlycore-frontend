@@ -15,7 +15,7 @@ export default function PageWrapper({ children }) {
       {/* Mobile top bar */}
       <div className="lg:hidden fixed top-0 left-0 right-0 z-50 bg-surface border-b border-border px-4 h-12 flex items-center justify-between">
         <Link to="/" className="font-display font-bold text-text-primary text-sm">
-          Truthful<span className="text-gradient">Wasp</span>
+          Authenly<span className="text-gradient">Core</span>
         </Link>
         <button
           onClick={() => setSidebarOpen(true)}
