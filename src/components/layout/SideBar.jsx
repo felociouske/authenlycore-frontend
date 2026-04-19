@@ -36,15 +36,22 @@ export default function Sidebar() {
       {/* Logo */}
       <div className="px-4 py-5 border-b border-border">
         <Link to="/" className="block">
-          <div className="flex  items-center gap-2 mb-1">
-            <div className="w-8 h-8 rounded bg-accent flex items-center justify-center text-white font-bold text-sm">
-              TW
+          <div className="flex flex-col items-center gap-2 mb-1">
+
+            <div className="w-20 h-16 rounded flex items-center justify-center overflow-hidden">
+              <img
+                src="/favicon.png"
+                alt="AuthenlyCore Logo"
+                className="w-full h-full object-contain"
+              />
             </div>
+
             <span className="font-display font-bold text-text-primary text-base">
               AuthenlyCore
             </span>
           </div>
-          <p className="text-xs text-text-muted ml-10">
+
+          <p className="text-xs text-text-muted text-center">
             Serving to expose all Scam sites
           </p>
         </Link>
@@ -83,9 +90,9 @@ export default function Sidebar() {
       <div className="py-4 px-4 border-b border-border">
         <div className="grid grid-cols-2 gap-2">
           {[
-            ["500+", "Reviewed"],
-            ["200+", "Exposed"],
-            ["50+", "Legit"],
+            ["499+", "Reviewed"],
+            ["196+", "Exposed"],
+            ["58+", "Legit"],
             ["1.2k+", "Reports"],
           ].map(([val, label]) => (
             <div

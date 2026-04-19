@@ -34,9 +34,13 @@ export default function HomePage() {
 
         {/* Create post bar */}
         <div className="flex items-center gap-2 bg-surface border border-border rounded-md p-2 mb-4">
-          <div className="w-8 h-8 rounded bg-elevated border border-border flex items-center justify-center text-text-muted text-xs shrink-0">
-            TW
-          </div>
+            <div className="w-15 h-8 rounded flex items-center justify-center overflow-hidden">
+              <img
+                src="/favicon1.png"
+                alt="AuthenlyCore Logo"
+                className="w-full h-full object-contain"
+              />
+            </div>
           <input
             type="text"
             value={search}
@@ -139,11 +143,11 @@ export default function HomePage() {
         {/* About box */}
         <div className="bg-surface border border-border rounded-md overflow-hidden">
           <div className="bg-gradient-to-r from-accent to-orange-400 px-4 py-6">
-            <h3 className="font-display font-bold text-white text-base">
-              TruthfulWasp
+            <h3 className="font-display text-center font-bold text-white text-base">
+              AuthenlyCore
             </h3>
-            <p className="text-orange-100 text-xs mt-1">
-              The community for exposing online scams
+            <p className="text-black text-xs mt-1">
+              Transparency and Acountability in the Online World
             </p>
           </div>
           <div className="p-4 space-y-3 text-sm">
@@ -153,7 +157,7 @@ export default function HomePage() {
             </p>
             <div className="grid grid-cols-2 gap-2 text-center py-2 border-y border-border">
               <div>
-                <div className="font-bold text-text-primary">500+</div>
+                <div className="font-bold text-text-primary">499+</div>
                 <div className="text-xs text-text-muted">Reviews</div>
               </div>
               <div>
@@ -162,7 +166,7 @@ export default function HomePage() {
               </div>
             </div>
             <Link to="/submit" className="btn-primary w-full justify-center">
-              Submit Evidence
+              What site did you loose to? <br /> <span className="text-xs text-text-muted text-center">Help us expose it</span>
             </Link>
             <Link to="/register" className="btn-secondary w-full justify-center">
               Create Account
