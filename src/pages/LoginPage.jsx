@@ -28,11 +28,15 @@ export default function LoginPage() {
     <div className="min-h-screen bg-base flex items-center justify-center px-4">
       <div className="w-full max-w-sm">
         <div className="text-center mb-6">
-          <div className="w-12 h-12 rounded bg-accent flex items-center justify-center text-white font-display font-bold text-lg mx-auto mb-3">
-            TW
+          <div className="w-20 h-16 mx-auto rounded overflow-hidden">
+            <img
+              src="/favicon.png"
+              alt="AuthenlyCore Logo"
+              className="w-full h-full object-contain"
+            />
           </div>
           <h1 className="font-display font-bold text-xl text-text-primary">
-            Log in to TruthfulWasp
+            Log in to AuthenlyCore
           </h1>
         </div>
 
