@@ -71,7 +71,7 @@ export default function LoginPage() {
 
           <div className="border-t border-border mt-4 pt-4 text-center">
             <p className="text-xs text-text-muted">
-              New to TruthfulWasp?{" "}
+              New to AuthenlyCore?{" "}
               <Link to="/register" className="text-accent hover:underline font-semibold">
                 Sign up
               </Link>
