@@ -126,6 +126,7 @@ export default function Sidebar() {
               </div>
             </div>
             <button
+              type="button"
               onClick={handleLogout}
               className="btn-ghost w-full justify-center border border-border"
             >

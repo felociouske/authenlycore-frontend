@@ -25,13 +25,20 @@ const STEPS = [
   { label: "Contact", desc: "Optional details" },
 ];
 
+const LAST_STEP = STEPS.length - 1;
+
 export default function SubmitEvidencePage() {
   const [step, setStep] = useState(0);
   const [files, setFiles] = useState([]);
   const [submitted, setSubmitted] = useState(false);
   const [loading, setLoading] = useState(false);
 
-  const { register, handleSubmit, trigger, formState: { errors } } = useForm({
+  const {
+    register,
+    handleSubmit,
+    trigger,
+    formState: { errors },
+  } = useForm({
     resolver: zodResolver(schema),
     defaultValues: { currency: "KES", is_anonymous: false },
   });
@@ -45,16 +52,26 @@ export default function SubmitEvidencePage() {
   });
 
   const nextStep = async () => {
-    const fields = [
-      ["platform_name_raw", "platform_url_raw"],
-      ["experience_description", "amount_lost"],
-      [],
-    ];
-    const ok = await trigger(fields[step]);
+    // Fields to validate per step — step 2 (file upload) has no required fields
+    const fieldsPerStep = {
+      0: ["platform_name_raw", "platform_url_raw"],
+      1: ["experience_description", "amount_lost"],
+      2: [],
+    };
+
+    const fieldsToValidate = fieldsPerStep[step] ?? [];
+    const ok = fieldsToValidate.length > 0
+      ? await trigger(fieldsToValidate)
+      : true;
+
     if (ok) setStep((s) => s + 1);
   };
 
   const onSubmit = async (values) => {
+    // Guard: only submit if we are actually on the last step
+    // This prevents any accidental triggers from earlier steps
+    if (step !== LAST_STEP) return;
+
     setLoading(true);
     try {
       const fd = new FormData();
@@ -71,6 +88,11 @@ export default function SubmitEvidencePage() {
     }
   };
 
+  // Dropzone props — stop click events from bubbling up into the form
+  const dropzoneProps = getRootProps({
+    onClick: (e) => e.stopPropagation(),
+  });
+
   if (submitted) {
     return (
       <div className="max-w-md mx-auto text-center py-20">
@@ -81,10 +103,12 @@ export default function SubmitEvidencePage() {
           Submission Received
         </h2>
         <p className="text-text-muted text-sm leading-relaxed mb-6">
-          Thank you for coming forward. Your submission is under review.
-          Once approved, it will be published to warn others.
+          Thank you for coming forward. Your submission is under review. Once
+          approved, it will be published to warn others.
         </p>
-        <Link to="/" className="btn-primary">Back to Home</Link>
+        <Link to="/" className="btn-primary">
+          Back to Home
+        </Link>
       </div>
     );
   }
@@ -96,25 +120,49 @@ export default function SubmitEvidencePage() {
           Submit Evidence
         </h1>
         <p className="text-text-muted text-sm">
-          All submissions are reviewed before publishing. You can remain anonymous.
+          All submissions are reviewed before publishing. You can remain
+          anonymous.
         </p>
       </div>
 
       {/* Step progress */}
       <div className="flex mb-6 bg-surface border border-border rounded-md p-3">
         {STEPS.map((s, i) => (
-          <div key={i} className={`flex-1 text-center px-1 ${i < STEPS.length - 1 ? "border-r border-border" : ""}`}>
-            <div className={`text-xs font-bold mb-0.5 ${i === step ? "text-accent" : i < step ? "text-trust" : "text-text-muted"}`}>
+          <div
+            key={i}
+            className={`flex-1 text-center px-1 ${
+              i < STEPS.length - 1 ? "border-r border-border" : ""
+            }`}
+          >
+            <div
+              className={`text-xs font-bold mb-0.5 ${
+                i === step
+                  ? "text-accent"
+                  : i < step
+                  ? "text-trust"
+                  : "text-text-muted"
+              }`}
+            >
               {i < step ? "✓" : `${i + 1}`}. {s.label}
             </div>
-            <div className="text-xs text-text-muted hidden sm:block">{s.desc}</div>
+            <div className="text-xs text-text-muted hidden sm:block">
+              {s.desc}
+            </div>
           </div>
         ))}
       </div>
 
-      <form onSubmit={handleSubmit(onSubmit)} className="bg-surface border border-border rounded-md p-6">
-
-        {/* Step 0 */}
+      {/*
+        The form wraps all steps but onSubmit is guarded —
+        it will do nothing unless step === LAST_STEP.
+        This means even if something triggers a submit event
+        on an earlier step, nothing will happen.
+      */}
+      <form
+        onSubmit={handleSubmit(onSubmit)}
+        className="bg-surface border border-border rounded-md p-6"
+      >
+        {/* Step 0 — Platform info */}
         {step === 0 && (
           <div className="space-y-4">
             <h2 className="font-display font-semibold text-lg text-text-primary mb-1">
@@ -122,18 +170,30 @@ export default function SubmitEvidencePage() {
             </h2>
             <div>
               <label className="label">Platform Name *</label>
-              <input {...register("platform_name_raw")} className="input" placeholder="e.g. CashFlow Pro" />
-              {errors.platform_name_raw && <p className="error-text">{errors.platform_name_raw.message}</p>}
+              <input
+                {...register("platform_name_raw")}
+                className="input"
+                placeholder="e.g. CashFlow Pro"
+              />
+              {errors.platform_name_raw && (
+                <p className="error-text">{errors.platform_name_raw.message}</p>
+              )}
             </div>
             <div>
               <label className="label">Platform URL</label>
-              <input {...register("platform_url_raw")} className="input" placeholder="https://scamsite.com" />
-              {errors.platform_url_raw && <p className="error-text">{errors.platform_url_raw.message}</p>}
+              <input
+                {...register("platform_url_raw")}
+                className="input"
+                placeholder="https://scamsite.com"
+              />
+              {errors.platform_url_raw && (
+                <p className="error-text">{errors.platform_url_raw.message}</p>
+              )}
             </div>
           </div>
         )}
 
-        {/* Step 1 */}
+        {/* Step 1 — Experience */}
         {step === 1 && (
           <div className="space-y-4">
             <h2 className="font-display font-semibold text-lg text-text-primary mb-1">
@@ -147,12 +207,21 @@ export default function SubmitEvidencePage() {
                 className="input resize-none"
                 placeholder="Describe how you found the platform, what they promised, how you lost money, what happened when you tried to withdraw..."
               />
-              {errors.experience_description && <p className="error-text">{errors.experience_description.message}</p>}
+              {errors.experience_description && (
+                <p className="error-text">
+                  {errors.experience_description.message}
+                </p>
+              )}
             </div>
             <div className="grid grid-cols-2 gap-3">
               <div>
                 <label className="label">Amount Lost (optional)</label>
-                <input {...register("amount_lost")} type="number" className="input" placeholder="0" />
+                <input
+                  {...register("amount_lost")}
+                  type="number"
+                  className="input"
+                  placeholder="0"
+                />
               </div>
               <div>
                 <label className="label">Currency</label>
@@ -171,7 +240,7 @@ export default function SubmitEvidencePage() {
           </div>
         )}
 
-        {/* Step 2 */}
+        {/* Step 2 — File upload */}
         {step === 2 && (
           <div className="space-y-4">
             <h2 className="font-display font-semibold text-lg text-text-primary mb-1">
@@ -181,8 +250,13 @@ export default function SubmitEvidencePage() {
               Screenshots, chat screenshots, receipts. Max 5 files, 10MB each.
               Images and PDFs only.
             </p>
+
+            {/*
+              dropzoneProps already has onClick: e.stopPropagation()
+              injected above so clicking here never bubbles to the form
+            */}
             <div
-              {...getRootProps()}
+              {...dropzoneProps}
               className={`border-2 border-dashed rounded p-8 text-center cursor-pointer transition-all ${
                 isDragActive
                   ? "border-accent bg-accent/5"
@@ -191,16 +265,30 @@ export default function SubmitEvidencePage() {
             >
               <input {...getInputProps()} />
               <p className="text-text-muted text-sm mb-1">
-                {isDragActive ? "Drop files here" : "Drag and drop files, or click to browse"}
+                {isDragActive
+                  ? "Drop files here"
+                  : "Drag and drop files, or click to browse"}
               </p>
               <p className="text-xs text-text-muted">JPG, PNG, WEBP, PDF</p>
             </div>
+
             {files.length > 0 && (
               <ul className="space-y-1.5">
                 {files.map((f, i) => (
-                  <li key={i} className="flex items-center justify-between bg-elevated border border-border rounded px-3 py-2 text-xs">
-                    <span className="font-mono text-text-muted truncate mr-3">{f.name}</span>
-                    <button type="button" onClick={() => setFiles((p) => p.filter((_, idx) => idx !== i))} className="text-danger hover:text-red-400 font-semibold shrink-0">
+                  <li
+                    key={i}
+                    className="flex items-center justify-between bg-elevated border border-border rounded px-3 py-2 text-xs"
+                  >
+                    <span className="font-mono text-text-muted truncate mr-3">
+                      {f.name}
+                    </span>
+                    <button
+                      type="button"
+                      onClick={() =>
+                        setFiles((p) => p.filter((_, idx) => idx !== i))
+                      }
+                      className="text-danger hover:text-red-400 font-semibold shrink-0"
+                    >
                       Remove
                     </button>
                   </li>
@@ -210,51 +298,82 @@ export default function SubmitEvidencePage() {
           </div>
         )}
 
-        {/* Step 3 */}
+        {/* Step 3 — Contact details */}
         {step === 3 && (
           <div className="space-y-4">
             <h2 className="font-display font-semibold text-lg text-text-primary mb-1">
               Your details (optional)
             </h2>
             <p className="text-text-muted text-xs leading-relaxed">
-              These are never shown publicly. We may contact you for clarification only.
+              These are never shown publicly. We may contact you for
+              clarification only.
             </p>
             <div>
               <label className="label">Name</label>
-              <input {...register("submitter_name")} className="input" placeholder="John Doe" />
+              <input
+                {...register("submitter_name")}
+                className="input"
+                placeholder="John Doe"
+              />
             </div>
             <div>
               <label className="label">Email</label>
-              <input {...register("submitter_email")} type="email" className="input" placeholder="you@email.com" />
-              {errors.submitter_email && <p className="error-text">{errors.submitter_email.message}</p>}
+              <input
+                {...register("submitter_email")}
+                type="email"
+                className="input"
+                placeholder="you@email.com"
+              />
+              {errors.submitter_email && (
+                <p className="error-text">{errors.submitter_email.message}</p>
+              )}
             </div>
             <label className="flex items-start gap-3 cursor-pointer select-none">
-              <input {...register("is_anonymous")} type="checkbox" className="mt-0.5 w-4 h-4 rounded accent-accent" />
+              <input
+                {...register("is_anonymous")}
+                type="checkbox"
+                className="mt-0.5 w-4 h-4 rounded accent-accent"
+              />
               <span className="text-sm text-text-muted leading-snug">
                 Submit anonymously. My name will not appear anywhere.
               </span>
             </label>
             <div className="bg-caution/5 border border-caution/20 rounded p-3 text-xs text-caution leading-relaxed">
-              By submitting, you confirm this evidence is authentic and consent to
-              TruthfulWasp reviewing and potentially publishing it for public
+              By submitting, you confirm this evidence is authentic and consent
+              to TruthfulWasp reviewing and potentially publishing it for public
               awareness.
             </div>
           </div>
         )}
 
-        {/* Nav */}
+        {/* Navigation buttons */}
         <div className="flex justify-between mt-6 pt-4 border-t border-border">
           {step > 0 ? (
-            <button type="button" onClick={() => setStep((s) => s - 1)} className="btn-secondary">
+            <button
+              type="button"
+              onClick={() => setStep((s) => s - 1)}
+              className="btn-secondary"
+            >
               Back
             </button>
-          ) : <div />}
-          {step < STEPS.length - 1 ? (
-            <button type="button" onClick={nextStep} className="btn-primary">
+          ) : (
+            <div />
+          )}
+
+          {step < LAST_STEP ? (
+            <button
+              type="button"
+              onClick={nextStep}
+              className="btn-primary"
+            >
               Continue →
             </button>
           ) : (
-            <button type="submit" disabled={loading} className="btn-primary">
+            <button
+              type="submit"
+              disabled={loading}
+              className="btn-primary"
+            >
               {loading ? "Submitting..." : "Submit Evidence"}
             </button>
           )}

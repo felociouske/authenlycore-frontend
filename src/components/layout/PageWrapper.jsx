@@ -18,6 +18,7 @@ export default function PageWrapper({ children }) {
           Authenly<span className="text-gradient">Core</span>
         </Link>
         <button
+          type="button"
           onClick={() => setSidebarOpen(true)}
           className="text-text-muted hover:text-text-primary"
         >
@@ -37,6 +38,7 @@ export default function PageWrapper({ children }) {
           <div className="relative w-64 bg-surface border-r border-border z-10">
             <div className="absolute top-3 right-3">
               <button
+                type="button"
                 onClick={() => setSidebarOpen(false)}
                 className="text-text-muted hover:text-text-primary p-1"
               >
